@@ -11,41 +11,36 @@ struct ProfileView: View {
     // The Core Data context from the environment.
     @Environment(\.managedObjectContext) private var viewContext
     
-    // Fetch all available cards from Core Data (the "database").
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Cards.credit_card, ascending: true)],
-        animation: .default)
-    private var availableCards: FetchedResults<Cards>
-    
-    // Local state for search text, search results (as card names) and the user's added cards.
-    @State private var searchText: String = ""
-    @State private var searchResults: [String] = []
-    @State private var userCards: [String] = []
+    //For User
+    @Binding var userCards: [String]
+    //For overlay content
+    @Binding var showSearchOverlay: Bool
     
     var body: some View {
-        NavigationView {
+        NavigationView{
+            // MARK: Cards Page Content
             VStack {
-                // Search bar for entering a card name.
-                TextField("Enter card name", text: $searchText, onEditingChanged: { _ in
-                    filterResults()
-                }, onCommit: {
-                    filterResults()
-                })
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal)
-                
-                // Display search results if there are any.
-                if !searchResults.isEmpty {
-                    List(searchResults, id: \.self) { cardName in
-                        Button(action: {
-                            addCard(cardName)
-                        }) {
-                            Text(cardName)
-                        }
+                HStack{
+                    Text("Your Wallet")
+                        .font(.largeTitle)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                        .offset(x: 5)
+                    
+                    // MARK: Add Buttong for search page
+                    Button {
+                        withAnimation(
+                            .interactiveSpring(response: 0.8, dampingFraction: 0.7, blendDuration: 0.7)) {
+                                showSearchOverlay = true
+                            }
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundColor(.white)
+                            .padding(9)
+                            .background(.black, in: Circle())
                     }
-                    .listStyle(PlainListStyle())
+                    .offset(x: -20)
                 }
                 
                 Divider().padding()
@@ -68,35 +63,18 @@ struct ProfileView: View {
                 
                 Spacer()
             }
-            .navigationTitle("Profile")
-            .toolbar {
-                // Provides an Edit button to enable deletion.
-                EditButton()
-            }
+//            .navigationTitle("Profile")
+//            .toolbar {
+//                // Provides an Edit button to enable deletion.
+//                EditButton()
+//            }
+            .offset(y: 40)
+                
+            
         }
+        
     }
     
-    // Filters availableCards (fetched from Core Data) based on the search text.
-    private func filterResults() {
-        if searchText.isEmpty {
-            searchResults = []
-        } else {
-            searchResults = availableCards.compactMap { card in
-                guard let name = card.credit_card else { return nil }
-                return name.lowercased().contains(searchText.lowercased()) ? name : nil
-            }
-        }
-    }
-    
-    // Adds a card name to the user's list if it isn't already present.
-    private func addCard(_ card: String) {
-        if !userCards.contains(card) {
-            userCards.append(card)
-        }
-        // Clear the search fields.
-        searchText = ""
-        searchResults = []
-    }
     
     // Deletes cards from the user's list.
     private func deleteCard(at offsets: IndexSet) {
@@ -104,11 +82,10 @@ struct ProfileView: View {
     }
 }
 
-
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         // For preview purposes, we inject a preview Core Data context.
-        ProfileView()
+        ProfileView(userCards: .constant([]), showSearchOverlay: .constant(true))
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
