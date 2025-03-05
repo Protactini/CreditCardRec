@@ -8,12 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
-    //User's Card Array
+    // User's Card Array
     @State private var userCards: [String] = []
-    //For overlay content
+    // Controls the animation state (e.g. slide in/out)
     @State private var showSearchOverlay = false
+    // For overlay drag offset
     @State private var dragOffset: CGFloat = 0.0
     
+//    var computedScale: CGFloat {
+//        let threshold: CGFloat = 300
+//        let progress = min(dragOffset / threshold, 1.0)
+//        return 0.95 + progress * 0.05
+//    }
+//    
     var body: some View {
         ZStack{
             TabView {
@@ -36,51 +43,79 @@ struct ContentView: View {
                         Text("Profile")
                     }
             }
+            .zIndex(0)
+//            .scaleEffect(showSearchOverlay ? computedScale : 1)
+//            .animation(.easeInOut(duration: 0.3), value: dragOffset)
             
             // MARK: Overlay Section
             if showSearchOverlay {
                 // Semi-transparent background that covers the whole screen.
                 // Tapping it dismisses the overlay.
-                Color.black.opacity(0.3)
+                Color.black.opacity(0.1)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        withAnimation {
-                            showSearchOverlay = false
-                        }
+                        dismissOverlay()
                     }
+                    .zIndex(1)
 
                 // Search overlay view
                 SearchOverlayView(userCards: self.$userCards,
                     showSearchOverlay: $showSearchOverlay)
-                    .offset(y: dragOffset)
-                    .transition(.move(edge: .bottom))
-                    .gesture(
-                        DragGesture()
-                            .onChanged { gesture in
-                                // Allow dragging only downward
-                                if gesture.translation.height > 0 {
-                                    dragOffset = gesture.translation.height
-                                }
+                .offset(y: dragOffset)
+                .transition(.move(edge: .bottom))
+                .gesture(
+                    DragGesture()
+                    .onChanged { gesture in
+                        // Allow dragging only downward
+                        if gesture.translation.height > 0 {
+                            dragOffset = gesture.translation.height
+                        }
+                    }
+                    .onEnded { gesture in
+                        // If dragged down enough, dismiss the overlay.
+                        if gesture.translation.height > 200 {
+                            dismissOverlay()
+                        } else {
+                            // Snap back if not dragged far enough
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                dragOffset = 0
                             }
-                            .onEnded { gesture in
-                                // If dragged down enough, dismiss the overlay.
-                                if gesture.translation.height > 100 {
-                                    withAnimation {
-                                        showSearchOverlay = false
-                                        dragOffset = 0
-                                    }
-                                } else {
-                                    // Snap back if not dragged far enough
-                                    withAnimation {
-                                        dragOffset = 0
-                                    }
-                                }
-                            }
-                    )
+                        }
+                    }
+                )
+                .zIndex(2)
             }
         }
     }
+    
+/*-------------------------------------------------------------------
+ --------------------------------------------------------------------
+ --------------------------------------------------------------------
+ --------------------------------------------------------------------
+ --------------------------------------------------------------------
+ */
+    //Dismiss overlay function
+    private func dismissOverlay() {
+        // Animate the overlay sliding down off the screen.
+        withAnimation(.easeInOut(duration: 0.3)) {
+            dragOffset = UIScreen.main.bounds.height
+        }
+        // After the slide-out animation completes, remove the overlay.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                showSearchOverlay = false
+                dragOffset = 0
+            }
+        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+//            withAnimation(.easeInOut(duration: 0.1)) {
+//                showSearchOverlay = false
+//                dragOffset = 0
+//            }
+//        }
+    }
 }
+
 
 
 #Preview {

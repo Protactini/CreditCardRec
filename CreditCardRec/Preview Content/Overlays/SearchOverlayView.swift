@@ -58,7 +58,7 @@ struct SearchOverlayView: View {
             Spacer()
         }
         // Set the overlay to cover 80% of the screen height.
-        .frame(height: UIScreen.main.bounds.height * 0.9)
+        .frame(height: UIScreen.main.bounds.height * 0.95)
         .frame(maxWidth: .infinity)
         .background(Color.white)
         .cornerRadius(20)
@@ -94,7 +94,7 @@ struct SearchOverlayView: View {
 struct SearchOverlayView_Previews: PreviewProvider {
     static var previews: some View {
         // For preview purposes, we inject a preview Core Data context.
-        ProfileView(userCards: .constant([]), showSearchOverlay: .constant(true))
+        SearchOverlayView(userCards: .constant([]), showSearchOverlay: .constant(true))
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
