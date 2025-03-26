@@ -290,7 +290,7 @@
 				CODE_SIGN_ENTITLEMENTS = CreditCardRec/CreditCardRec.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CreditCardRec/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"CreditCardRec/Views\"";
 				DEVELOPMENT_TEAM = KDRNT5M479;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -321,7 +321,7 @@
 				CODE_SIGN_ENTITLEMENTS = CreditCardRec/CreditCardRec.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CreditCardRec/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"CreditCardRec/Views\"";
 				DEVELOPMENT_TEAM = KDRNT5M479;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

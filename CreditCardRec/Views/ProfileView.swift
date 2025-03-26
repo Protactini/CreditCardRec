@@ -1,5 +1,5 @@
 //
-//  ProfileView.swift
+//  Views.swift
 //  CreditCardRec
 //
 //  Created by Hongzhi ZHU on 2/26/25.
@@ -82,7 +82,7 @@ struct ProfileView: View {
     }
 }
 
-struct ProfileView_Previews: PreviewProvider {
+struct Views_Previews: PreviewProvider {
     static var previews: some View {
         // For preview purposes, we inject a preview Core Data context.
         ProfileView(userCards: .constant([]), showSearchOverlay: .constant(true))
