@@ -9,18 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     // User's Card Array
-    @State private var userCards: [String] = []
+    @State private var userCards: [Card] = []
     // Controls the animation state (e.g. slide in/out)
     @State private var showSearchOverlay = false
     // For overlay drag offset
     @State private var dragOffset: CGFloat = 0.0
-    
-//    var computedScale: CGFloat {
-//        let threshold: CGFloat = 300
-//        let progress = min(dragOffset / threshold, 1.0)
-//        return 0.95 + progress * 0.05
-//    }
-//    
+     
     var body: some View {
         ZStack{
             TabView {
@@ -44,8 +38,6 @@ struct ContentView: View {
                     }
             }
             .zIndex(0)
-//            .scaleEffect(showSearchOverlay ? computedScale : 1)
-//            .animation(.easeInOut(duration: 0.3), value: dragOffset)
             
             // MARK: Overlay Section
             if showSearchOverlay {
@@ -60,7 +52,8 @@ struct ContentView: View {
 
                 // Search overlay view
                 SearchOverlayView(userCards: self.$userCards,
-                    showSearchOverlay: $showSearchOverlay)
+                    showSearchOverlay: $showSearchOverlay,
+                    dismissOverlay: dismissOverlay)
                 .offset(y: dragOffset)
                 .transition(.move(edge: .bottom))
                 .gesture(

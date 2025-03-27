@@ -9,20 +9,33 @@ import SwiftUI
 
 // MARK: BANK CARDS MODEL
 
-struct Card: Identifiable {
+struct Card: Identifiable, Hashable {
     var id = UUID().uuidString
     var name: String
-    var cardNumber: String
     var cardImage: String
-    var cashback: CashBack?
+    var cashBack: [CashBack]?
+    
+    // Conformance to Hashable: only the name is used for hashing.
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
+    
+    // Equality is determined solely by the name.
+    static func == (lhs: Card, rhs: Card) -> Bool {
+        return lhs.name == rhs.name
+    }
 }
 
 
 // MARK: - CARD SAMPLE DATA
 
 var cards: [Card] = [
-    Card(name: "Benjamin Miles", cardNumber: "4929 0958 237 63677", cardImage: "card1"),
-    Card(name: "Steven Vance", cardNumber: "4179 2863 0168 7150", cardImage: "card2"),
-    Card(name: "Jonathan Hayes", cardNumber: "4716 2394 4688 5700", cardImage: "card3"),
-    Card(name: "Eldon Allen", cardNumber: "5295 8066 4295 5853", cardImage: "card4"),
+    Card(name: "Chase Freedom Unlimited", cardImage: "card1", cashBack: cashBacks),
+    Card(name: "Citi Double Cash", cardImage: "card2", cashBack: cashBacks),
+    Card(name: "Bank of America Customized Cash Rewards", cardImage: "card3", cashBack: cashBacks),
+    Card(name: "Capital One Venture Rewards", cardImage: "card4", cashBack: cashBacks),
+    Card(name: "Apple Card", cardImage: "card4", cashBack: cashBacks),
+    Card(name: "Discover it", cardImage: "card4", cashBack: cashBacks),
+    Card(name: "Amex Blue Cash", cardImage: "card4", cashBack: cashBacks),
+    Card(name: "Wells Fargo Cash Back", cardImage: "card4", cashBack: cashBacks),
 ]

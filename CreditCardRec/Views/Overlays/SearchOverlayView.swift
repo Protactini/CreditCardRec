@@ -8,26 +8,18 @@ import SwiftUI
 
 struct SearchOverlayView: View {
     
-    // The Core Data context from the environment.
-    @Environment(\.managedObjectContext) private var viewContext
-    
-    // Fetch all available cards from Core Data (the "database").
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Cards.credit_card, ascending: true)],
-        animation: .default)
-    private var availableCards: FetchedResults<Cards>
-    
-    // Local state for search text, search results (as card names) and the user's added cards.
+    // Local state for search text and search results (now as Card objects).
     @State private var searchText: String = ""
-    @State private var searchResults: [String] = []
+    @State private var searchResults: [Card] = []
     
-    // Inharitent veriables from profile view
-    @Binding var userCards: [String]
+    // Binding now holds an array of Card objects.
+    @Binding var userCards: [Card]
     @Binding var showSearchOverlay: Bool
+    let dismissOverlay: () -> Void
 
     var body: some View {
         VStack(spacing: 20) {
-            // Drag handle indicator
+            // Drag handle indicator.
             Capsule()
                 .frame(width: 40, height: 6)
                 .foregroundColor(Color.gray.opacity(0.5))
@@ -43,44 +35,48 @@ struct SearchOverlayView: View {
             .background(Color(.systemGray6))
             .cornerRadius(8)
             .padding(.horizontal)
+            // Update search results whenever searchText changes.
+            .onChange(of: searchText) { _ in
+                filterResults()
+            }
 
             // Display search results if there are any.
             if !searchResults.isEmpty {
-                List(searchResults, id: \.self) { cardName in
+                List(searchResults, id: \.id) { card in
                     Button(action: {
-                        addCard(cardName)
+                        addCard(card)
+                        dismissOverlay()
                     }) {
-                        Text(cardName)
+                        Text(card.name)
                     }
                 }
                 .listStyle(PlainListStyle())
             }
             Spacer()
         }
-        // Set the overlay to cover 80% of the screen height.
+        // Set the overlay to cover 95% of the screen height.
         .frame(height: UIScreen.main.bounds.height * 0.95)
         .frame(maxWidth: .infinity)
         .background(Color.white)
         .cornerRadius(20)
         .shadow(radius: 10)
-        // Position the overlay so that the top 20% of the screen (original page) remains visible.
+        // Position the overlay so that the top 20% of the screen remains visible.
         .padding(.top, UIScreen.main.bounds.height * 0.2)
     }
     
-    // Filters availableCards (fetched from Core Data) based on the search text.
+    // Filters the global 'cards' array based on the search text and returns Card objects.
     private func filterResults() {
         if searchText.isEmpty {
             searchResults = []
         } else {
-            searchResults = availableCards.compactMap { card in
-                guard let name = card.credit_card else { return nil }
-                return name.lowercased().contains(searchText.lowercased()) ? name : nil
+            searchResults = cards.filter { card in
+                card.name.lowercased().contains(searchText.lowercased())
             }
         }
     }
     
-    // Adds a card name to the user's list if it isn't already present.
-    private func addCard(_ card: String) {
+    // Adds a Card to the user's list if it isn't already present.
+    private func addCard(_ card: Card) {
         if !userCards.contains(card) {
             userCards.append(card)
         }
@@ -88,13 +84,12 @@ struct SearchOverlayView: View {
         searchText = ""
         searchResults = []
     }
-    
 }
 
 struct SearchOverlayView_Previews: PreviewProvider {
     static var previews: some View {
         // For preview purposes, we inject a preview Core Data context.
-        SearchOverlayView(userCards: .constant([]), showSearchOverlay: .constant(true))
+        SearchOverlayView(userCards: .constant([]), showSearchOverlay: .constant(true), dismissOverlay: { })
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

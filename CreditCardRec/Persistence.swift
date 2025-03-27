@@ -9,32 +9,11 @@ import CoreData
 
 struct PersistenceController {
     static let shared = PersistenceController()
-    static let cardNames = [
-        "Chase Freedom Unlimited",
-        "Citi Double Cash",
-        "Bank of America Customized Cash Rewards",
-        "Capital One Venture Rewards",
-        "Apple Card",
-        "Discover it",
-        "Amex Blue Cash",
-        "Wells Fargo Cash Back"
-    ]
 
     @MainActor
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        
-//        for _ in 0..<10 {
-//            let newItem = Item(context: viewContext)
-//            newItem.timestamp = Date()
-//        }
-//        
-        // Preload cards into Core Data.
-        for cardName in cardNames {
-            let newCard = Cards(context: viewContext)
-            newCard.credit_card = cardName
-        }
         
         do {
             try viewContext.save()

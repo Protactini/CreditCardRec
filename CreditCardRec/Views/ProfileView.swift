@@ -12,7 +12,7 @@ struct ProfileView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     //For User
-    @Binding var userCards: [String]
+    @Binding var userCards: [Card]
     //For overlay content
     @Binding var showSearchOverlay: Bool
     
@@ -54,7 +54,7 @@ struct ProfileView: View {
                 } else {
                     List {
                         ForEach(userCards, id: \.self) { card in
-                            Text(card)
+                            Text(card.name)
                         }
                         .onDelete(perform: deleteCard)
                     }
