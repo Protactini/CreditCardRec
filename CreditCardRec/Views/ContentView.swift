@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     // User's Card Array
-    @State private var userCards: [Card] = []
+//    @State private var userCards: [Card] = []
     // Controls the animation state (e.g. slide in/out)
     @State private var showSearchOverlay = false
     // For overlay drag offset
@@ -30,8 +30,7 @@ struct ContentView: View {
                         Text("Find Best Card")
                     }
                 
-                ProfileView(userCards: self.$userCards,
-                    showSearchOverlay: $showSearchOverlay)
+                ProfileView(showSearchOverlay: $showSearchOverlay)
                     .tabItem {
                         Image(systemName: "person.crop.circle")
                         Text("Profile")
@@ -51,8 +50,7 @@ struct ContentView: View {
                     .zIndex(1)
 
                 // Search overlay view
-                SearchOverlayView(userCards: self.$userCards,
-                    showSearchOverlay: $showSearchOverlay,
+                SearchOverlayView(showSearchOverlay: $showSearchOverlay,
                     dismissOverlay: dismissOverlay)
                 .offset(y: dragOffset)
                 .transition(.move(edge: .bottom))
@@ -81,12 +79,14 @@ struct ContentView: View {
         }
     }
     
-/*-------------------------------------------------------------------
- --------------------------------------------------------------------
- --------------------------------------------------------------------
- --------------------------------------------------------------------
- --------------------------------------------------------------------
- */
+    /*-------------------------------------------------------------------------------
+     --------------------------------------------------------------------------------
+     ------------------------Display Functions for overlays--------------------------
+     --------------------------------------------------------------------------------
+     --------------------------------------------------------------------------------
+     --------------------------------------------------------------------------------
+     --------------------------------------------------------------------------------
+     */
     //Dismiss overlay function
     private func dismissOverlay() {
         // Animate the overlay sliding down off the screen.
@@ -100,12 +100,6 @@ struct ContentView: View {
                 dragOffset = 0
             }
         }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-//            withAnimation(.easeInOut(duration: 0.1)) {
-//                showSearchOverlay = false
-//                dragOffset = 0
-//            }
-//        }
     }
 }
 

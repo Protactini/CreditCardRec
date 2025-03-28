@@ -11,8 +11,6 @@ struct ProfileView: View {
     // The Core Data context from the environment.
     @Environment(\.managedObjectContext) private var viewContext
     
-    //For User
-    @Binding var userCards: [Card]
     //For overlay content
     @Binding var showSearchOverlay: Bool
     
@@ -85,7 +83,7 @@ struct ProfileView: View {
 struct Views_Previews: PreviewProvider {
     static var previews: some View {
         // For preview purposes, we inject a preview Core Data context.
-        ProfileView(userCards: .constant([]), showSearchOverlay: .constant(true))
+        ProfileView(showSearchOverlay: .constant(true))
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

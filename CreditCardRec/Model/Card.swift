@@ -39,3 +39,5 @@ var cards: [Card] = [
     Card(name: "Amex Blue Cash", cardImage: "card4", cashBack: cashBacks),
     Card(name: "Wells Fargo Cash Back", cardImage: "card4", cashBack: cashBacks),
 ]
+
+var userCards: [Card] = []
