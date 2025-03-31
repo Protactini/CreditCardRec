@@ -18,7 +18,7 @@ struct ContentView: View {
     var body: some View {
         ZStack{
             TabView {
-                CardsView()
+                CardsView(showOverlay: showOverlay)
                     .tabItem {
                         Image(systemName: "creditcard")
                         Text("Cards")
@@ -30,7 +30,7 @@ struct ContentView: View {
                         Text("Find Best Card")
                     }
                 
-                ProfileView(showSearchOverlay: $showSearchOverlay)
+                ProfileView(showOverlay: showOverlay)
                     .tabItem {
                         Image(systemName: "person.crop.circle")
                         Text("Profile")
@@ -50,8 +50,7 @@ struct ContentView: View {
                     .zIndex(1)
 
                 // Search overlay view
-                SearchOverlayView(showSearchOverlay: $showSearchOverlay,
-                    dismissOverlay: dismissOverlay)
+                SearchOverlayView(dismissOverlay: dismissOverlay)
                 .offset(y: dragOffset)
                 .transition(.move(edge: .bottom))
                 .gesture(
@@ -87,7 +86,7 @@ struct ContentView: View {
      --------------------------------------------------------------------------------
      --------------------------------------------------------------------------------
      */
-    //Dismiss overlay function
+    // Mark: Dismiss overlay function
     private func dismissOverlay() {
         // Animate the overlay sliding down off the screen.
         withAnimation(.easeInOut(duration: 0.3)) {
@@ -99,6 +98,14 @@ struct ContentView: View {
                 showSearchOverlay = false
                 dragOffset = 0
             }
+        }
+    }
+    //Dismiss overlay function
+    private func showOverlay() {
+        // Animate the overlay sliding up screen.
+        withAnimation(
+        .interactiveSpring(response: 0.8, dampingFraction: 0.7, blendDuration: 0.7)) {
+            showSearchOverlay = true
         }
     }
 }

@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct CardsView: View {
+    // MARK: For overlay content
+    let showOverlay: () -> Void
+    
     // MARK: - CARD ANIAMTION PROPERTIES
     @State var expandCards: Bool = false
     
@@ -15,23 +18,45 @@ struct CardsView: View {
     @State var currentCard: Card?
     @State var showDetailCashBack: Bool = false
     @Namespace var animation
-    var showCards = userCards
+    var showCards = cards
     
     var body: some View {
         NavigationView {
-            ScrollView() {
-                VStack {
-                    // Mark: Header
-                    Text("Cards")
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-                        .offset(y: 5)
+            VStack(spacing: 0) {
+                // Mark: Header
+                Text("Cards")
+                    .font(.largeTitle)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .overlay(alignment: .trailing) {
+                        // MARK: CLOSE BUTTON
+                        // Conditional button: plus when expandCards is false, cross when true.
+                        Button {
+                            if expandCards {
+                                // Toggle expandCards state on tap.
+                                withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.7, blendDuration: 0.7)) {
+                                    expandCards.toggle()
+                                }
+                            } else {
+                                showOverlay()
+                            }
+                        } label: {
+                            Image(systemName: "plus")
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(expandCards ? Color.pink : Color.black, in: Circle())
+                            // Rotate 45° when expandCards is true.
+                            .rotationEffect(.degrees(expandCards ? 45 : 0))
+                        }
+                        .offset(x: -25)
+                    }
+                    .padding(.horizontal, 15)
+                    .padding(.bottom, 10)
                     
-                    Divider().padding().offset(y: 5)
+                // MARK: - CARD LIST
                     
-                    // MARK: - CARD LIST
+                ScrollView() {
                     VStack(spacing: 0) {
                         ForEach(showCards) {card in
                             Group {
@@ -54,19 +79,20 @@ struct CardsView: View {
                     }
                     .overlay {
                         Rectangle()
-                            .fill(.black.opacity(expandCards ? 0 : 0.01))
+                            .fill(.black.opacity(0.01))
                             .onTapGesture {
-                                withAnimation(.easeInOut(duration: 0.35)) {
+                                withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.7, blendDuration: 0.7)) {
                                     expandCards = !expandCards
                                 }
                             }
                     }
                     .padding(.top, expandCards ? 30 : 0)
                 }
-            }
-            .coordinateSpace(name: "SCROLL")
-            .offset(y: expandCards ? 0 : 30)
+                    
+                }
         }
+        .coordinateSpace(name: "SCROLL")
+        .offset(y: expandCards ? 0 : 30)
     }
     
     // MARK: CARD VIEW
@@ -97,6 +123,9 @@ struct CardsView: View {
         }
         .frame(height: 200)
         .padding(.horizontal)
+//        .overlay(
+//            Rectangle()
+//        )
     }
     
     // MARK: - GET CARD INDEX NUMBER
@@ -111,6 +140,6 @@ struct CardsView: View {
 struct CardsView_Previews: PreviewProvider {
     static var previews: some View {
         // For preview purposes, we inject a preview Core Data context.
-        CardsView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        CardsView(showOverlay: { }).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

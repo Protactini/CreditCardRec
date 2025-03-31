@@ -12,7 +12,7 @@ struct ProfileView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     //For overlay content
-    @Binding var showSearchOverlay: Bool
+    let showOverlay: () -> Void
     
     var body: some View {
         NavigationView{
@@ -28,10 +28,7 @@ struct ProfileView: View {
                     
                     // MARK: Add Buttong for search page
                     Button {
-                        withAnimation(
-                            .interactiveSpring(response: 0.8, dampingFraction: 0.7, blendDuration: 0.7)) {
-                                showSearchOverlay = true
-                            }
+                        showOverlay()
                     } label: {
                         Image(systemName: "plus")
                             .foregroundColor(.white)
@@ -61,11 +58,6 @@ struct ProfileView: View {
                 
                 Spacer()
             }
-//            .navigationTitle("Profile")
-//            .toolbar {
-//                // Provides an Edit button to enable deletion.
-//                EditButton()
-//            }
             .offset(y: 40)
                 
             
@@ -83,7 +75,7 @@ struct ProfileView: View {
 struct Views_Previews: PreviewProvider {
     static var previews: some View {
         // For preview purposes, we inject a preview Core Data context.
-        ProfileView(showSearchOverlay: .constant(true))
+        ProfileView(showOverlay: { })
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

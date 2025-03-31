@@ -13,8 +13,6 @@ struct SearchOverlayView: View {
     @State private var searchResults: [Card] = []
     
     // Binding now holds an array of Card objects.
-//    @Binding var userCards: [Card]
-    @Binding var showSearchOverlay: Bool
     let dismissOverlay: () -> Void
 
     var body: some View {
@@ -89,7 +87,7 @@ struct SearchOverlayView: View {
 struct SearchOverlayView_Previews: PreviewProvider {
     static var previews: some View {
         // For preview purposes, we inject a preview Core Data context.
-        SearchOverlayView(showSearchOverlay: .constant(true), dismissOverlay: { })
+        SearchOverlayView(dismissOverlay: { })
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
