@@ -25,35 +25,36 @@ struct CardsView: View {
             VStack(spacing: 0) {
                 // Mark: Header
                 Text("Cards")
-                    .font(.largeTitle)
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .overlay(alignment: .trailing) {
-                        // MARK: CLOSE BUTTON
-                        // Conditional button: plus when expandCards is false, cross when true.
-                        Button {
-                            if expandCards {
-                                // Toggle expandCards state on tap.
-                                withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.7, blendDuration: 0.7)) {
-                                    expandCards.toggle()
-                                }
-                            } else {
-                                showOverlay()
+                .font(.largeTitle)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+                .overlay(alignment: .trailing) {
+                    // MARK: CLOSE BUTTON
+                    // Conditional button: plus when expandCards is false, cross when true.
+                    Button {
+                        if expandCards {
+                            // Toggle expandCards state on tap.
+                            withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.7, blendDuration: 0.7)) {
+                                expandCards.toggle()
                             }
-                        } label: {
-                            Image(systemName: "plus")
-                            .foregroundColor(.white)
-                            .padding(10)
-                            .background(expandCards ? Color.pink : Color.black, in: Circle())
-                            // Rotate 45° when expandCards is true.
-                            .rotationEffect(.degrees(expandCards ? 45 : 0))
+                        } else {
+                            showOverlay()
                         }
-                        .offset(x: -25)
+                    } label: {
+                        Image(systemName: "plus")
+                        .foregroundColor(.white)
+                        .padding(10)
+                        .background(expandCards ? Color.pink : Color.black, in: Circle())
+                        // Rotate 45° when expandCards is true.
+                        .rotationEffect(.degrees(expandCards ? 45 : 0))
                     }
-                    .padding(.horizontal, 15)
-                    .padding(.bottom, 10)
-                    
+                    .offset(x: -25)
+                }
+                .padding(.horizontal, 15)
+                .padding(.bottom, 10)
+                .debugBorder(DebugConfig.color(at: 1))
+                
                 // MARK: - CARD LIST
                     
                 ScrollView() {
@@ -68,28 +69,22 @@ struct CardsView: View {
                                         .matchedGeometryEffect(id: card.id, in: animation)
                                 }
                             }
-        //                    // For open the details
-        //                    .onTapGesture {
-        //                        withAnimation(.easeInOut(duration: 0.35)) {
-        //                            currentCard = card
-        //                            showDetailCashBack = true
-        //                        }
-        //                    }
                         }
                     }
                     .overlay {
                         Rectangle()
-                            .fill(.black.opacity(0.01))
-                            .onTapGesture {
-                                withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.7, blendDuration: 0.7)) {
-                                    expandCards = !expandCards
-                                }
+                        .fill(.black.opacity(0.01))
+                        .onTapGesture {
+                            withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.7, blendDuration: 0.7)) {
+                                expandCards = !expandCards
                             }
+                        }
                     }
                     .padding(.top, expandCards ? 30 : 0)
+                    .offset(y: 50)
                 }
                     
-                }
+            }
         }
         .coordinateSpace(name: "SCROLL")
         .offset(y: expandCards ? 0 : 30)
@@ -120,12 +115,15 @@ struct CardsView: View {
                 .foregroundColor(.white)
             }
             .offset(y: expandCards ? offset: -rect.minY + offset)
+//            .offset(y: -rect.height)
+            
+            // Center the ZStack horizontally within the available space.
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .debugBorder(DebugConfig.color(at: 1))
         }
         .frame(height: 200)
         .padding(.horizontal)
-//        .overlay(
-//            Rectangle()
-//        )
+        .debugBorder(DebugConfig.color(at: 1))
     }
     
     // MARK: - GET CARD INDEX NUMBER
