@@ -53,6 +53,7 @@ struct CardsView: View {
                 }
                 .padding(.horizontal, 15)
                 .padding(.bottom, 10)
+                // Outlines the outer frame
                 .debugBorder(DebugConfig.color(at: 1))
                 
                 // MARK: - CARD LIST
@@ -83,7 +84,6 @@ struct CardsView: View {
                     .padding(.top, expandCards ? 30 : 0)
                     .offset(y: 50)
                 }
-                    
             }
         }
         .coordinateSpace(name: "SCROLL")
@@ -96,7 +96,12 @@ struct CardsView: View {
         GeometryReader {proxy in
             
             let rect = proxy.frame(in: .named("SCROLL"))
-            let offset = CGFloat(getIndex(Card: card) * (expandCards ? 10 : 70))
+            
+            // Offset parameters for card view
+//            let offset = CGFloat(getIndex(Card: card) * (expandCards ? 10 : 70))
+            let cardOffSet = -CGFloat(getIndex(Card: card) * 100)
+            let offTop: CGFloat = 150
+            let stickyOffset =  rect.minY + cardOffSet < offTop ? -rect.minY  + offTop: cardOffSet
             
             ZStack(alignment: .bottomLeading) {
                 
@@ -114,16 +119,17 @@ struct CardsView: View {
                 .padding(.bottom, 10)
                 .foregroundColor(.white)
             }
-            .offset(y: expandCards ? offset: -rect.minY + offset)
-//            .offset(y: -rect.height)
-            
+            .offset(y: stickyOffset)
             // Center the ZStack horizontally within the available space.
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            // Outlines the outer frame
             .debugBorder(DebugConfig.color(at: 1))
+            
         }
         .frame(height: 200)
         .padding(.horizontal)
-        .debugBorder(DebugConfig.color(at: 1))
+        // Outlines the outer frame
+        .debugBorder(DebugConfig.color(at: 2))
     }
     
     // MARK: - GET CARD INDEX NUMBER

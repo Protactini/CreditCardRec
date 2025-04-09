@@ -34,10 +34,10 @@ var cards: [Card] = [
     Card(name: "Citi Double Cash", cardImage: "card2", cashBack: cashBacks),
     Card(name: "Bank of America Customized Cash Rewards", cardImage: "card3", cashBack: cashBacks),
     Card(name: "Capital One Venture Rewards", cardImage: "card4", cashBack: cashBacks),
-//    Card(name: "Apple Card", cardImage: "card4", cashBack: cashBacks),
-//    Card(name: "Discover it", cardImage: "card4", cashBack: cashBacks),
-//    Card(name: "Amex Blue Cash", cardImage: "card4", cashBack: cashBacks),
-//    Card(name: "Wells Fargo Cash Back", cardImage: "card4", cashBack: cashBacks),
+    Card(name: "Apple Card", cardImage: "card4", cashBack: cashBacks),
+    Card(name: "Discover it", cardImage: "card4", cashBack: cashBacks),
+    Card(name: "Amex Blue Cash", cardImage: "card4", cashBack: cashBacks),
+    Card(name: "Wells Fargo Cash Back", cardImage: "card4", cashBack: cashBacks),
 ]
 
 var userCards: [Card] = []
