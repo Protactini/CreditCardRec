@@ -82,8 +82,11 @@ struct CardsView: View {
                         }
                     }
                     .padding(.top, expandCards ? 30 : 0)
+                    // MARK: set the bottom line of the scroll view
+                    .padding(.bottom, -7 * 100 + 50) // need to change with the size ofshowCards
                     .offset(y: 50)
                 }
+                .scrollDisabled(false)
             }
         }
         .coordinateSpace(name: "SCROLL")
