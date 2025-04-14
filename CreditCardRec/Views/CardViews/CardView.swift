@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct CardView: View {
+    @Binding var expandCards: Bool
+    
     let card: Card
     var onTap: (() -> Void)? = nil   // optional tap handler
 
@@ -33,7 +35,7 @@ struct CardView: View {
                 .padding(.bottom, 10)
                 .foregroundColor(.white)
             }
-            .offset(y: stickyOffset)
+            .offset(y: expandCards ? 0 : stickyOffset)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
         .frame(height: 200)
@@ -46,5 +48,23 @@ struct CardView: View {
     // Helper to find the index in the global `cards` array
     private func getIndex(of card: Card) -> Int {
         cards.firstIndex { $0.id == card.id } ?? 0
+    }
+}
+
+// MARK: – CardView Preview
+struct CardView_Previews: PreviewProvider {
+    static var previews: some View {
+        // Wrap in a ScrollView with the same coordinate space used at runtime
+        ScrollView {
+            CardView(
+                expandCards: .constant(true),
+                card: cards.first!
+            ) {
+                // Mock tap action
+                print("Card tapped")
+            }
+        }
+        .coordinateSpace(name: "SCROLL")
+        .previewLayout(.sizeThatFits)
     }
 }
