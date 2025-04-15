@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct TransactionView: View {
+struct CashBackView: View {
     let currentCard: Card
     @Binding var expandCards: Bool
     var animation: Namespace.ID
@@ -15,8 +15,7 @@ struct TransactionView: View {
             ) {
                 // onTap to dismiss
                 withAnimation(.easeInOut) {
-                    showExpenseView = true
-                    expandCards.toggle()
+                    showExpenseView = false
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     withAnimation(.easeInOut(duration: 0.35)) {
@@ -34,7 +33,7 @@ struct TransactionView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         ForEach(cashBacks) { cashBack in
-                            ExpenseCardView(cashBack: cashBack)
+                            EachCashBackView(cashBack: cashBack)
                         }
                     }
                     .padding()
@@ -59,7 +58,7 @@ struct TransactionView: View {
     }
 }
 
-struct TransactionView_Previews: PreviewProvider {
+struct CashBackView_Previews: PreviewProvider {
     // Create a namespace for the matchedGeometryEffect
     @Namespace static var animation
 
@@ -67,11 +66,10 @@ struct TransactionView_Previews: PreviewProvider {
         // Pick a sample card from your global `cards` array
         let sampleCard = cards.first!
 
-        TransactionView(
+        CashBackView(
             currentCard: sampleCard,
             expandCards:.constant(true),
             animation: animation
         )
-        // TransactionView doesn’t need a Core Data context
     }
 }

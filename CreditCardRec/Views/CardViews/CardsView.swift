@@ -62,41 +62,41 @@ struct CardsView: View {
 
                 // MARK: - CARD LIST
                 ZStack {
-                    ScrollViewReader { reader in                                 // NEW
-                        ZStack {
-                            ScrollView {                                      // CHANGED: moved ScrollView here
-                                VStack(spacing: 0) {
-                                    ForEach(showCards) { card in
-                                        // Use shared CardView and pass onTap action
-                                        CardView(
-                                            expandCards: $expandCards,
-                                            card: card
-                                        ) {               // CHANGED
-                                            withAnimation(.spring()) {
-                                                expandCards = true
-                                                currentCard = card
+                    if !expandCards {
+                        ScrollViewReader { reader in                                 // NEW
+                            ZStack {
+                                ScrollView {                                      // CHANGED: moved ScrollView here
+                                    VStack(spacing: 0) {
+                                        ForEach(showCards) { card in
+                                            // Use shared CardView and pass onTap action
+                                            CardView(
+                                                expandCards: $expandCards,
+                                                card: card
+                                            ) {               // CHANGED
+                                                withAnimation(.spring()) {
+                                                    expandCards = true
+                                                    currentCard = card
+                                                }
                                             }
+                                            .matchedGeometryEffect(id: card.id, in: animation)
+                                            .id(card.id)                        // NEW: identify for scrolling
                                         }
-                                        .matchedGeometryEffect(id: card.id, in: animation)
-                                        .id(card.id)                        // NEW: identify for scrolling
                                     }
+                                    .padding(.bottom, bottomPadding)
                                 }
-                                .padding(.bottom, bottomPadding)
+                                .scrollDisabled(expandCards)                  // NEW: disable scroll when folded
+                                .coordinateSpace(name: "SCROLL")               // NEW: coordinate space for GeometryReader
                             }
-                            .scrollDisabled(expandCards)                  // NEW: disable scroll when folded
-                            .coordinateSpace(name: "SCROLL")               // NEW: coordinate space for GeometryReader
                         }
                     }
-                    
                     if let card = currentCard, expandCards {
-                        TransactionView(
+                        CashBackView(
                             currentCard: card,
                             expandCards: $expandCards,
                             animation: animation
                         )
                     }
                 }
-                .animation(.interactiveSpring(response: 0.8, dampingFraction: 0.7), value: expandCards)
             }
             .padding([.horizontal, .top])
             .frame(maxWidth: .infinity, maxHeight: .infinity)

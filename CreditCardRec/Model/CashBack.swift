@@ -7,33 +7,45 @@
 
 import SwiftUI
 
-// MARK: - EXPENSE MODEL
+// MARK: – CASH BACK AREAS
+
+enum CashBackArea: String, CaseIterable, Identifiable {
+    case groceryStores       = "Grocery Stores"
+    case gasStations         = "Gas Stations"
+    case evCharging          = "EV Charging"
+    case diningRestaurants   = "Dining & Restaurants"
+    case onlineShopping      = "Online Shopping"
+    case travel              = "Travel"
+    case streamingServices   = "Streaming Services"
+    case drugstores          = "Drugstores"
+    case homeImprovement     = "Home Improvement Stores"
+    case transitCommuting    = "Transit & Commuting"
+    case wholesaleClubs      = "Wholesale Clubs"
+    
+    var id: String { rawValue }
+}
+
+// MARK: – CASH BACK RATE MODEL
 
 struct CashBack: Identifiable {
     var id = UUID().uuidString
-    var amountSpent: String
-    var product: String
+    var area: CashBackArea
     var productIcon: String
-    var spendType: String
+    var percentage: Double   // e.g. 2.5 means 2.5%
 }
 
+// MARK: – SAMPLE RATES
 
-// MARK: EXPENSE DATA
-
-var cashBacks: [CashBack] = [
-
-    CashBack(amountSpent: "$130", product: "Dribbble", productIcon: "icon1", spendType: "Membership"),
-    CashBack(amountSpent: "$111", product: "Disney", productIcon: "icon2", spendType: "Streaming"),
-    CashBack(amountSpent: "$130", product: "Ayana Mart", productIcon: "icon3", spendType: "Groceries"),
-    CashBack(amountSpent: "&230", product: "Huawei", productIcon: "icon4", spendType: "Gadets"),
-    CashBack(amountSpent: "$110", product: "House Remt", productIcon: "icon5", spendType: "Family"),
-    CashBack(amountSpent: "$12", product: "Amazon Prime", productIcon: "icon6", spendType: "Movies"),
-    CashBack(amountSpent: "$9", product: "Netflix", productIcon: "icon7", spendType: "Movies"),
-    CashBack(amountSpent: "$90", product: "HP Development", productIcon: "icon8", spendType: "Computer"),
-    CashBack(amountSpent: "$5", product: "Duolingo", productIcon: "icon9", spendType: "Membership"),
-    CashBack(amountSpent: "$69", product: "Figma", productIcon: "icon10", spendType: "Membership"),
-    CashBack(amountSpent: "$80", product: "Airbnb", productIcon: "icon11", spendType: "Tourism"),
-    CashBack(amountSpent: "$10", product: "Soudagor", productIcon: "icon12", spendType: "Foods"),
-    CashBack(amountSpent: "$330", product: "Apple", productIcon: "icon13", spendType: "Computer"),
-    CashBack(amountSpent: "$21", product: "Facebook", productIcon: "icon14", spendType: "Advertising"),
+let cashBacks: [CashBack] = [
+    CashBack(area: .groceryStores,     productIcon: "icon1", percentage: 3.0),
+    CashBack(area: .gasStations,       productIcon: "icon2", percentage: 2.0),
+    CashBack(area: .evCharging,        productIcon: "icon3", percentage: 1.5),
+    CashBack(area: .diningRestaurants, productIcon: "icon4", percentage: 4.0),
+    CashBack(area: .onlineShopping,    productIcon: "icon5", percentage: 1.0),
+    CashBack(area: .travel,            productIcon: "icon6", percentage: 2.5),
+    CashBack(area: .streamingServices, productIcon: "icon7", percentage: 1.0),
+    CashBack(area: .drugstores,        productIcon: "icon8", percentage: 1.5),
+    CashBack(area: .homeImprovement,   productIcon: "icon9", percentage: 2.0),
+    CashBack(area: .transitCommuting,  productIcon: "icon10", percentage: 3.0),
+    CashBack(area: .wholesaleClubs,    productIcon: "icon11", percentage: 1.0)
 ]

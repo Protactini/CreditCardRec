@@ -1,5 +1,5 @@
 //
-//  ExpenseCardView.swift
+//  EachCashBackView.swift
 //  CreditCardRec
 //
 //  Created by Hongzhi ZHU on 4/11/25.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ExpenseCardView: View {
+struct EachCashBackView: View {
     let cashBack: CashBack
     
     // Animate each row in when the view appears
@@ -22,22 +22,15 @@ struct ExpenseCardView: View {
                 .frame(width: 45, height: 45)
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(cashBack.product)
+                Text(cashBack.area.rawValue)
                     .fontWeight(.bold)
-                
-                Text(cashBack.spendType)
-                    .font(.caption)
-                    .foregroundColor(.gray)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(spacing: 8) {
-                Text(cashBack.amountSpent)
-                    .fontWeight(.bold)
-                
-                Text(Date().formatted(date: .numeric, time: .omitted))
-                    .font(.caption)
-                    .foregroundColor(.gray)
+                // Percentage text
+                Text(String(format: "%.1f%%", cashBack.percentage))
+                .fontWeight(.bold)
             }
         }
         .opacity(showView ? 1 : 0)
@@ -58,8 +51,8 @@ struct ExpenseCardView: View {
     }
 }
 
-struct ExpenseCardView_Previews: PreviewProvider {
+struct EachCashBackView_Previews: PreviewProvider {
     static var previews: some View {
-        ExpenseCardView(cashBack: cashBacks[0])
+        EachCashBackView(cashBack: cashBacks[10])
     }
 }
