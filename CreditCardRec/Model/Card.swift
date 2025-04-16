@@ -27,17 +27,22 @@ struct Card: Identifiable, Hashable {
 }
 
 
+
+// ----- Will put everything in the data abse in the future --------------------
+// ----- Need to be able to auto updated ---------------------------------------
+
 // MARK: - CARD SAMPLE DATA
 
-var cards: [Card] = [
-    Card(name: "Chase Freedom Unlimited", cardImage: "card1", cashBack: cashBacks),
-    Card(name: "Citi Double Cash", cardImage: "card2", cashBack: cashBacks),
-    Card(name: "Bank of America Customized Cash Rewards", cardImage: "card3", cashBack: cashBacks),
-    Card(name: "Capital One Venture Rewards", cardImage: "card4", cashBack: cashBacks),
-    Card(name: "Apple Card", cardImage: "card4", cashBack: cashBacks),
-    Card(name: "Discover it", cardImage: "card4", cashBack: cashBacks),
-    Card(name: "Amex Blue Cash", cardImage: "card4", cashBack: cashBacks),
-    Card(name: "Wells Fargo Cash Back", cardImage: "card4", cashBack: cashBacks),
+
+let cards: [Card] = [
+    Card(name: "Chase Freedom Unlimited",                 cardImage: "card1", cashBack: chaseFreedomUnlimitedRates),
+    Card(name: "Citi Double Cash",                        cardImage: "card2", cashBack: citiDoubleCashRates),
+    Card(name: "Bank of America Customized Cash Rewards", cardImage: "card3", cashBack: boaCustomizedCashRates),
+    Card(name: "Capital One Venture Rewards",             cardImage: "card4", cashBack: capitalOneVentureRates),
+    Card(name: "Apple Card",                              cardImage: "card1", cashBack: appleCardRates),
+    Card(name: "Discover it Cash Back",                   cardImage: "card2", cashBack: discoverItRates),
+    Card(name: "Amex Blue Cash Preferred",                cardImage: "card3", cashBack: amexBlueCashRates),
+    Card(name: "Wells Fargo Active Cash",                 cardImage: "card4", cashBack: wellsFargoActiveCashRates)
 ]
 
 var userCards: [Card] = []

@@ -14,7 +14,7 @@ struct CashBackView: View {
                 card: currentCard
             ) {
                 // onTap to dismiss
-                withAnimation(.easeInOut) {
+                withAnimation(.easeInOut(duration: 0.2)) {
                     showExpenseView = false
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -32,7 +32,7 @@ struct CashBackView: View {
                 let offscreenY = proxy.size.height + 50
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
-                        ForEach(cashBacks) { cashBack in
+                        ForEach(currentCard.cashBack ?? []) { cashBack in
                             EachCashBackView(cashBack: cashBack)
                         }
                     }

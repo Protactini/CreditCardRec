@@ -47,7 +47,7 @@ struct EachCashBackView: View {
     
     private func getIndex() -> Int {
         // Assumes you have a global `cashBacks: [CashBack]` array
-        cashBacks.firstIndex { $0.id == cashBack.id } ?? 0
+        cashBacks.firstIndex { $0.area == cashBack.area } ?? 0
     }
 }
 
