@@ -17,6 +17,15 @@ struct CardsView: View {
     @Namespace private var animation                      // CHANGED: private
 
     var showCards = cards
+    private var pageName: String {
+        if expandCards, let card = currentCard {
+            // Split on spaces, take first component, or default to full name
+            let firstWord = card.name.components(separatedBy: " ").first ?? card.name
+            return firstWord
+        } else {
+            return "Cards"
+        }
+    }
 
     // Compute bottom padding once
     private var bottomPadding: CGFloat {
@@ -28,7 +37,7 @@ struct CardsView: View {
         NavigationView {
             VStack(spacing: 0) {
                 // MARK: Header
-                Text("Cards")
+                Text(pageName)
                     .font(.largeTitle)
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity, alignment: .leading)
