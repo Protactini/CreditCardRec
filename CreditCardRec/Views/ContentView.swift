@@ -29,12 +29,6 @@ struct ContentView: View {
                         Image(systemName: "magnifyingglass")
                         Text("Find Best Card")
                     }
-//                
-//                ProfileView(showOverlay: showOverlay)
-//                    .tabItem {
-//                        Image(systemName: "person.crop.circle")
-//                        Text("Profile")
-//                    }
             }
             .zIndex(0)
             

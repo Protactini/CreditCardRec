@@ -19,6 +19,7 @@ struct FindBestCardView: View {
     
     // Namespace for matched‐geometry effects between the bar and overlay
     @Namespace private var animation
+    @Namespace private var searchBar
 
     var body: some View {
         ZStack {
@@ -35,24 +36,30 @@ struct FindBestCardView: View {
                                     .fill(Color(.systemGray6))
                                     .matchedGeometryEffect(id: area.rawValue, in: animation)
                             )
+                        
+                            .debugBorder(DebugConfig.color(at: 1))
                     } else {
-                        Text("Select category…")
+                        Text("Choose a category…")
                             .foregroundColor(.gray)
+                            .debugBorder(DebugConfig.color(at: 2))
+                            .matchedGeometryEffect(id: searchBar, in: animation)
                     }
                     
                     Spacer()
+                    
                 }
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(Color(.systemGray4), lineWidth: 1)
                 )
-                .onTapGesture {
+                .padding()
+                .contentShape(Rectangle())            // Make the entire padded area tappable
+                .onTapGesture {                       // Attach your tap handler here
                     withAnimation(.spring()) {
                         expandSearch = true
                     }
                 }
-                .padding()
 
                 // MARK: Card List
                 ScrollView {
@@ -71,6 +78,11 @@ struct FindBestCardView: View {
 
             // MARK: Search Overlay
             if expandSearch {
+//                Color.black.opacity(1)
+//                    .ignoresSafeArea()
+//                    .zIndex(1)
+
+                
                 VStack {
                     // Top bar with matched pill and OK button
                     HStack {
@@ -83,9 +95,18 @@ struct FindBestCardView: View {
                                         .fill(Color(.systemGray6))
                                         .matchedGeometryEffect(id: area.rawValue, in: animation)
                                 )
+                                .onTapGesture {
+                                    if expandSearch {
+                                        withAnimation(.spring()) {
+                                            selectedArea = nil
+                                        }
+                                    }
+                                }
                         } else {
                             Text("Choose a category")
                                 .foregroundColor(.primary)
+                                .debugBorder(DebugConfig.color(at: 2))
+                                .matchedGeometryEffect(id: searchBar, in: animation)
                         }
                         Spacer()
                         Button("OK") {
@@ -104,23 +125,26 @@ struct FindBestCardView: View {
                         .padding(.horizontal)
                     }
                     .padding()
+                    .padding()// 1st padding (inside stroke)
+                    .debugBorder(DebugConfig.color(at: 2))
                     
                     // Grid of all areas
                     let columns = [GridItem(.adaptive(minimum: 80), spacing: 16)]
                     LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(CashBackArea.allCases) { area in
+                        ForEach(CashBackArea.allCases
+                            .filter { area in area != selectedArea }) { area in
                             Text(area.rawValue)
                                 .font(.caption2)
                                 .multilineTextAlignment(.center)
                                 .padding(10)
                                 .background(
-                                    Circle()
+                                    RoundedRectangle(cornerRadius: 8)
                                         .fill(selectedArea == area ? Color.blue : Color(.systemGray5))
                                 )
                                 .foregroundColor(selectedArea == area ? .white : .primary)
                                 .matchedGeometryEffect(id: area.rawValue, in: animation)
                                 .onTapGesture {
-                                    withAnimation(.easeInOut) {
+                                    withAnimation(.spring()) {
                                         selectedArea = area
                                     }
                                 }
