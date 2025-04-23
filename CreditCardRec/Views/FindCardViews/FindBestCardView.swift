@@ -12,10 +12,10 @@ struct FindBestCardView: View {
     @State private var cardsList: [Card] = cards
     
     // Controls whether the search overlay is showing
-    @State private var expandSearch = false
+    @State private var expandSearch = true
     
     // The area selected in the search overlay
-    @State private var selectedArea: CashBackArea? = nil
+    @State private var selectedAreas: [CashBackArea] = []
     
     // Namespace for matched‐geometry effects between the bar and overlay
     @Namespace private var animation
@@ -25,41 +25,46 @@ struct FindBestCardView: View {
         ZStack {
             VStack(spacing: 0) {
                 // MARK: Search Bar
-                HStack {
-                    if let area = selectedArea {
-                        // Show the selected area as a pill
-                        Text(area.rawValue)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color(.systemGray6))
+                ScrollView(.horizontal, showsIndicators: false){
+                    HStack {
+                        if !selectedAreas.isEmpty {
+                            // Show the selected area as a pill
+                            ForEach(selectedAreas, id:\.self) { area in
+                                Text(area.rawValue)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color(.systemGray6))
+                                    )
+                                    .opacity(expandSearch ? 0 : 1)
+                                    .debugBorder(DebugConfig.color(at: 1))
                                     .matchedGeometryEffect(id: area.rawValue, in: animation)
-                            )
+                            }
+                        } else {
+                            Text("Choose a category…")
+                                .foregroundColor(.gray)
+                                .debugBorder(DebugConfig.color(at: 2))
+                                .matchedGeometryEffect(id: searchBar, in: animation)
+                        }
                         
-                            .debugBorder(DebugConfig.color(at: 1))
-                    } else {
-                        Text("Choose a category…")
-                            .foregroundColor(.gray)
-                            .debugBorder(DebugConfig.color(at: 2))
-                            .matchedGeometryEffect(id: searchBar, in: animation)
+                        Spacer()
+                        
                     }
-                    
-                    Spacer()
-                    
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color(.systemGray4), lineWidth: 1)
-                )
-                .padding()
-                .contentShape(Rectangle())            // Make the entire padded area tappable
-                .onTapGesture {                       // Attach your tap handler here
-                    withAnimation(.spring()) {
-                        expandSearch = true
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color(.systemGray4), lineWidth: 1)
+                    )
+                    .padding()
+                    .contentShape(Rectangle())            // Make the entire padded area tappable
+                    .onTapGesture {                       // Attach your tap handler here
+                        withAnimation(.spring()) {
+                            expandSearch = true
+                        }
                     }
                 }
+                
 
                 // MARK: Card List
                 ScrollView {
@@ -78,51 +83,63 @@ struct FindBestCardView: View {
 
             // MARK: Search Overlay
             if expandSearch {
-//                Color.black.opacity(1)
-//                    .ignoresSafeArea()
-//                    .zIndex(1)
-
-                
                 VStack {
                     // Top bar with matched pill and OK button
                     HStack {
-                        if let area = selectedArea {
-                            Text(area.rawValue)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 8)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(Color(.systemGray6))
-                                        .matchedGeometryEffect(id: area.rawValue, in: animation)
-                                )
-                                .onTapGesture {
-                                    if expandSearch {
-                                        withAnimation(.spring()) {
-                                            selectedArea = nil
-                                        }
+                        ScrollView(.horizontal, showsIndicators: false){
+                            HStack {
+                                if !selectedAreas.isEmpty {
+                                    // Show the selected area as a pill
+                                    ForEach(selectedAreas, id:\.self) { area in
+                                        Text(area.rawValue)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 8)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 8)
+                                                    .fill(Color(.systemGray6))
+                                            )
+//                                            .opacity(expandSearch ? 0 : 1)
+                                            .debugBorder(DebugConfig.color(at: 1))
+                                            .onTapGesture {
+                                                if expandSearch {
+                                                    withAnimation(.spring()) {
+                                                        if let idx = selectedAreas.firstIndex(of: area) {
+                                                            selectedAreas.remove(at: idx)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .matchedGeometryEffect(id: area.rawValue, in: animation)
                                     }
+                                } else {
+                                    Text("Choose a category…")
+                                        .foregroundColor(.gray)
+                                        .debugBorder(DebugConfig.color(at: 2))
+                                        .matchedGeometryEffect(id: searchBar, in: animation)
                                 }
-                        } else {
-                            Text("Choose a category")
-                                .foregroundColor(.primary)
-                                .debugBorder(DebugConfig.color(at: 2))
-                                .matchedGeometryEffect(id: searchBar, in: animation)
+                                
+                                
+                                Spacer()
+                            }
                         }
+                        
                         Spacer()
+                        
                         Button("OK") {
                             // Sort cards by selectedArea’s cash back desc
-                            if let sel = selectedArea {
-                                cardsList.sort {
-                                    let lhs = $0.cashBack?.first { $0.area == sel }?.percentage ?? 0
-                                    let rhs = $1.cashBack?.first { $0.area == sel }?.percentage ?? 0
-                                    return lhs > rhs
-                                }
-                            }
+//                            if let sel = selectedArea {
+//                                cardsList.sort {
+//                                    let lhs = $0.cashBack?.first { $0.area == sel }?.percentage ?? 0
+//                                    let rhs = $1.cashBack?.first { $0.area == sel }?.percentage ?? 0
+//                                    return lhs > rhs
+//                                }
+//                            }
                             withAnimation(.spring()) {
                                 expandSearch = false
                             }
                         }
                         .padding(.horizontal)
+                        .debugBorder(DebugConfig.color(at: 2))
                     }
                     .padding()
                     .padding()// 1st padding (inside stroke)
@@ -131,23 +148,27 @@ struct FindBestCardView: View {
                     // Grid of all areas
                     let columns = [GridItem(.adaptive(minimum: 80), spacing: 16)]
                     LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(CashBackArea.allCases
-                            .filter { area in area != selectedArea }) { area in
-                            Text(area.rawValue)
-                                .font(.caption2)
-                                .multilineTextAlignment(.center)
-                                .padding(10)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(selectedArea == area ? Color.blue : Color(.systemGray5))
-                                )
-                                .foregroundColor(selectedArea == area ? .white : .primary)
-                                .matchedGeometryEffect(id: area.rawValue, in: animation)
-                                .onTapGesture {
-                                    withAnimation(.spring()) {
-                                        selectedArea = area
+                        ForEach(CashBackArea.allCases) { area in
+                            if !selectedAreas.contains(area){
+                                Text(area.rawValue)
+                                    .font(.caption2)
+                                    .multilineTextAlignment(.center)
+                                    .padding(10)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color(.systemGray5))
+                                    )
+                                    .foregroundColor(.primary)
+                                    .onTapGesture {
+                                        withAnimation(.spring()) {
+                                            selectedAreas.append(area)
+                                        }
                                     }
-                                }
+//                                    .opacity(area == selectedArea ? 0 : 1)
+                                    .matchedGeometryEffect(id: area.rawValue, in: animation, isSource: true)
+                                    .debugBorder(DebugConfig.color(at: 3))
+                            }
+                            
                         }
                     }
                     .padding(.horizontal)
