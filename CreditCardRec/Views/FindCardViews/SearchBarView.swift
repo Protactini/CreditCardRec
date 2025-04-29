@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchBarView: View {
+    @Binding var cardsList: [Card]
     @Binding var expandSearch: Bool
     @Binding var selectedAreas: [CashBackArea]
     var animation: Namespace.ID
@@ -43,20 +44,22 @@ struct SearchBarView: View {
                 }
                 .padding(.horizontal, 4)
             }
-            .frame(height: 44)
+            .frame(height: expandSearch ? 44 : 35)
 
-            Spacer()
+//            Spacer()
 
             if expandSearch {
                 Button("OK") {
-                    // Sort cards by selectedArea’s cash back desc
-                    //                            if let sel = selectedArea {
-                    //                                cardsList.sort {
-                    //                                    let lhs = $0.cashBack?.first { $0.area == sel }?.percentage ?? 0
-                    //                                    let rhs = $1.cashBack?.first { $0.area == sel }?.percentage ?? 0
-                    //                                    return lhs > rhs
-                    //                                }
-                    //                            }
+                    // Sort cards by total cash-back % across all selected areas (highest first)
+                    cardsList.sort { lhs, rhs in
+                        let lhsScore = selectedAreas.reduce(0) { sum, area in
+                            sum + (lhs.cashBack?.first { $0.area == area }?.percentage ?? 0)
+                        }
+                        let rhsScore = selectedAreas.reduce(0) { sum, area in
+                            sum + (rhs.cashBack?.first { $0.area == area }?.percentage ?? 0)
+                        }
+                        return lhsScore > rhsScore
+                    }
                     withAnimation(.spring()) {
                         expandSearch = false
                     }
@@ -88,12 +91,14 @@ struct SearchBarView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             SearchBarView(
+                cardsList: .constant([]),
                 expandSearch: .constant(true),
                 selectedAreas: .constant([.groceryStores, .gasStations, .travel]),
                 animation: animation
             )
             SearchBarView(
-                expandSearch: .constant(true),
+                cardsList: .constant([]),
+                expandSearch: .constant(false),
                 selectedAreas: .constant([]),
                 animation: animation,
             )
