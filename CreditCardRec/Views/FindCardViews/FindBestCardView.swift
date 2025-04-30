@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct FindBestCardView: View {
-    // All cards to choose from
-    @State private var cardsList: [Card] = cards
+    // User Data
+    @EnvironmentObject var userData: UserData
     
     // Controls whether the search overlay is showing
     @State private var expandSearch = false
@@ -19,13 +19,14 @@ struct FindBestCardView: View {
     
     // Namespace for matched‐geometry effects between the bar and overlay
     @Namespace private var animation
+    // CHANGED: private
+    var rootAnimation: Namespace.ID                    
 
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 // MARK: Search Bar
-                SearchBarView(cardsList: $cardsList, expandSearch: $expandSearch,
-                              selectedAreas: $selectedAreas, animation: animation)
+                SearchBarView(expandSearch: $expandSearch, selectedAreas: $selectedAreas, animation: animation)
                 .debugBorder(DebugConfig.color(at: 2))
                 
 
@@ -33,15 +34,16 @@ struct FindBestCardView: View {
                     // MARK: Card List
                         ScrollView {
                             LazyVStack(spacing: 16) {
-                                ForEach(cardsList) { card in
+                                ForEach(userData.userCards) { card in
                                     CardView(expandCards: .constant(true), card: card) {
                                         /* no-op */
                                     }
+                                    .matchedGeometryEffect(id: card.id, in: rootAnimation)
                                 }
                             }
                             .padding(.horizontal)
                             .padding(.bottom, 20)
-                            .animation(.spring().delay(0.1), value: cardsList)
+                            .animation(.spring().delay(0.1), value: userData.userCards)
                         }
                         .zIndex(0)
                     
@@ -49,7 +51,7 @@ struct FindBestCardView: View {
                     // MARK: Search Overlay
                     if expandSearch {
                         // Grid of all areas
-                        FindCardSearchOverlayView(expandSearch: $expandSearch, selectedAreas: $selectedAreas, animation: animation)
+                        FindCardSearchOverlayView(expandSearch: $expandSearch, selectedAreas: $selectedAreas, animation: rootAnimation)
                         
                         .background(Color(.systemBackground).ignoresSafeArea())
                         .transition(.opacity.combined(with: .move(edge: .bottom)))
@@ -65,7 +67,11 @@ struct FindBestCardView: View {
 }
 
 struct FindBestCardView_Previews: PreviewProvider {
+    // Create a namespace for the matchedGeometryEffect
+    @Namespace static var rootAnimation
+    
     static var previews: some View {
-        FindBestCardView()
+        FindBestCardView(rootAnimation: rootAnimation)
+            .environmentObject(UserData())
     }
 }

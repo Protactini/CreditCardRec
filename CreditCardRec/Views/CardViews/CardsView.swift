@@ -8,15 +8,20 @@
 import SwiftUI
 
 struct CardsView: View {
+    // User Data
+    @EnvironmentObject var userData: UserData
+    
     // MARK: For overlay content
     let showOverlay: () -> Void
     
     // MARK: - CARD ANIMATION PROPERTIES
     @State private var expandCards = false                // CHANGED: private
     @State private var currentCard: Card? = nil             // CHANGED: private
-    @Namespace private var animation                      // CHANGED: private
+    var animation: Namespace.ID                      // CHANGED: private
 
-    var showCards = cards
+    var showCards = userCards
+    
+    
     private var pageName: String {
         if expandCards, let card = currentCard {
             // Split on spaces, take first component, or default to full name
@@ -29,7 +34,7 @@ struct CardsView: View {
 
     // Compute bottom padding once
     private var bottomPadding: CGFloat {
-        let count = CGFloat(showCards.count)
+        let count = CGFloat(userData.userCards.count)
         return -((count - 1) * 100) + 30
     }
 
@@ -76,7 +81,7 @@ struct CardsView: View {
                             ZStack {
                                 ScrollView {                                      // CHANGED: moved ScrollView here
                                     VStack(spacing: 0) {
-                                        ForEach(showCards) { card in
+                                        ForEach(userData.userCards) { card in
                                             // Use shared CardView and pass onTap action
                                             CardView(
                                                 expandCards: $expandCards,
@@ -116,8 +121,12 @@ struct CardsView: View {
 // MARK: - Preview
 
 struct CardsView_Previews: PreviewProvider {
+    // Create a namespace for the matchedGeometryEffect
+    @Namespace static var animation
+
     static var previews: some View {
-        CardsView(showOverlay: { })
+        CardsView(showOverlay: { }, animation: animation)
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            .environmentObject(UserData())
     }
 }

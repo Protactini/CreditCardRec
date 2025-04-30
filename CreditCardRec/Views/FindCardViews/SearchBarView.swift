@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct SearchBarView: View {
-    @Binding var cardsList: [Card]
+    // User Data
+    @EnvironmentObject var userData: UserData
+    
     @Binding var expandSearch: Bool
     @Binding var selectedAreas: [CashBackArea]
     var animation: Namespace.ID
@@ -51,7 +53,7 @@ struct SearchBarView: View {
             if expandSearch {
                 Button("OK") {
                     // Sort cards by total cash-back % across all selected areas (highest first)
-                    cardsList.sort { lhs, rhs in
+                    userData.userCards.sort { lhs, rhs in
                         let lhsScore = selectedAreas.reduce(0) { sum, area in
                             sum + (lhs.cashBack?.first { $0.area == area }?.percentage ?? 0)
                         }
@@ -91,17 +93,17 @@ struct SearchBarView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             SearchBarView(
-                cardsList: .constant([]),
                 expandSearch: .constant(true),
                 selectedAreas: .constant([.groceryStores, .gasStations, .travel]),
                 animation: animation
             )
+            .environmentObject(UserData())
             SearchBarView(
-                cardsList: .constant([]),
                 expandSearch: .constant(false),
                 selectedAreas: .constant([]),
                 animation: animation,
             )
+            .environmentObject(UserData())
         }
     }
 }

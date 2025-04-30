@@ -8,6 +8,9 @@ import SwiftUI
 
 struct SearchOverlayView: View {
     
+    // User Data
+    @EnvironmentObject var userData: UserData
+    
     // Local state for search text and search results (now as Card objects).
     @State private var searchText: String = ""
     @State private var searchResults: [Card] = []
@@ -75,8 +78,8 @@ struct SearchOverlayView: View {
     
     // Adds a Card to the user's list if it isn't already present.
     private func addCard(_ card: Card) {
-        if !userCards.contains(card) {
-            userCards.append(card)
+        if !userData.userCards.contains(card) {
+            userData.userCards.append(card)
         }
         // Clear the search fields.
         searchText = ""
