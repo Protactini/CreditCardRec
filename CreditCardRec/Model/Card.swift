@@ -7,42 +7,83 @@
 
 import SwiftUI
 
-// MARK: BANK CARDS MODEL
+// MARK: – PAYMENT METHOD
+
+enum PaymentMethod: String, CaseIterable, Identifiable {
+    case visa
+    case masterCard
+    case discover
+
+    var id: String { rawValue }
+}
+
+// MARK: – BANK CARDS MODEL
 
 struct Card: Identifiable, Hashable {
     var id = UUID().uuidString
     var name: String
-    var cardImage: String
+    var paymentMethod: PaymentMethod
     var cashBack: [CashBack]?
-    
-    // Conformance to Hashable: only the name is used for hashing.
+
+    // Computed property: picks the right image based on paymentMethod
+    var cardImage: String {
+        switch paymentMethod {
+        case .visa:
+            let images = ["card1", "card2", "card3"]
+            let index = Card.visaCounter % images.count
+            Card.visaCounter += 1
+            return images[index]
+        case .masterCard:
+            return "card4"
+        case .discover:
+            return "discover"
+        }
+    }
+
+    // Hashable conformance (only by name)
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
     }
-    
-    // Equality is determined solely by the name.
     static func == (lhs: Card, rhs: Card) -> Bool {
-        return lhs.name == rhs.name
+        lhs.name == rhs.name
     }
+
+    // Static counter used to cycle through visa images
+    private static var visaCounter = 0
 }
 
-
-
-// ----- Will put everything in the data abse in the future --------------------
-// ----- Need to be able to auto updated ---------------------------------------
-
-// MARK: - CARD SAMPLE DATA
-
+// MARK: – CARD SAMPLE DATA
 
 let cards: [Card] = [
-    Card(name: "Chase Freedom Unlimited",                 cardImage: "card1", cashBack: chaseFreedomUnlimitedRates),
-    Card(name: "Citi Double Cash",                        cardImage: "card2", cashBack: citiDoubleCashRates),
-    Card(name: "Bank of America Customized Cash Rewards", cardImage: "card3", cashBack: boaCustomizedCashRates),
-    Card(name: "Capital One Venture Rewards",             cardImage: "card4", cashBack: capitalOneVentureRates),
-    Card(name: "Apple Card",                              cardImage: "card1", cashBack: appleCardRates),
-    Card(name: "Discover it Cash Back",                   cardImage: "card2", cashBack: discoverItRates),
-    Card(name: "Amex Blue Cash Preferred",                cardImage: "card3", cashBack: amexBlueCashRates),
-    Card(name: "Wells Fargo Active Cash",                 cardImage: "card4", cashBack: wellsFargoActiveCashRates)
-]
+    Card(name: "Chase Freedom Unlimited",
+         paymentMethod: .visa,
+         cashBack: chaseFreedomUnlimitedRates),
 
-var userCards: [Card] = []
+    Card(name: "Citi Double Cash",
+         paymentMethod: .visa,
+         cashBack: citiDoubleCashRates),
+
+    Card(name: "Bank of America Customized Cash Rewards",
+         paymentMethod: .masterCard,
+         cashBack: boaCustomizedCashRates),
+
+    Card(name: "Capital One Venture Rewards",
+         paymentMethod: .visa,
+         cashBack: capitalOneVentureRates),
+
+    Card(name: "Apple Card",
+         paymentMethod: .discover,
+         cashBack: appleCardRates),
+
+    Card(name: "Discover it Cash Back",
+         paymentMethod: .discover,
+         cashBack: discoverItRates),
+
+    Card(name: "Amex Blue Cash Preferred",
+         paymentMethod: .masterCard,
+         cashBack: amexBlueCashRates),
+
+    Card(name: "Wells Fargo Active Cash",
+         paymentMethod: .masterCard,
+         cashBack: wellsFargoActiveCashRates)
+]

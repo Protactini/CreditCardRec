@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ProfileView: View {
+    // User Data
+    @EnvironmentObject var userData: UserData
+    
     // The Core Data context from the environment.
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -43,12 +46,12 @@ struct ProfileView: View {
                 // Section showing the user's added cards.
                 Text("Your Cards")
                     .font(.headline)
-                if userCards.isEmpty {
+                if userData.userCards.isEmpty {
                     Text("No cards added yet.")
                         .foregroundColor(.gray)
                 } else {
                     List {
-                        ForEach(userCards, id: \.self) { card in
+                        ForEach(userData.userCards, id: \.self) { card in
                             Text(card.name)
                         }
                         .onDelete(perform: deleteCard)
@@ -68,7 +71,7 @@ struct ProfileView: View {
     
     // Deletes cards from the user's list.
     private func deleteCard(at offsets: IndexSet) {
-        userCards.remove(atOffsets: offsets)
+        userData.userCards.remove(atOffsets: offsets)
     }
 }
 
@@ -77,5 +80,6 @@ struct Views_Previews: PreviewProvider {
         // For preview purposes, we inject a preview Core Data context.
         ProfileView(showOverlay: { })
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            .environmentObject(UserData())
     }
 }

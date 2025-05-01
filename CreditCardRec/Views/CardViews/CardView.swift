@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct CardView: View {
+    // User Data
+    @EnvironmentObject var userData: UserData
+    
     @Binding var expandCards: Bool
     
     let card: Card
@@ -47,7 +50,7 @@ struct CardView: View {
 
     // Helper to find the index in the global `cards` array
     private func getIndex(of card: Card) -> Int {
-        cards.firstIndex { $0.id == card.id } ?? 0
+        userData.userCards.firstIndex { $0.id == card.id } ?? 0
     }
 }
 
@@ -66,5 +69,6 @@ struct CardView_Previews: PreviewProvider {
         }
         .coordinateSpace(name: "SCROLL")
         .previewLayout(.sizeThatFits)
+        .environmentObject(UserData())
     }
 }

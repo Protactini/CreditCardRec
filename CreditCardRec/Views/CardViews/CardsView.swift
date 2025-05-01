@@ -19,7 +19,6 @@ struct CardsView: View {
     @State private var currentCard: Card? = nil             // CHANGED: private
     var animation: Namespace.ID                      // CHANGED: private
 
-    var showCards = userCards
     
     
     private var pageName: String {
