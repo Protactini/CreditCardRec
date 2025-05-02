@@ -92,5 +92,6 @@ struct SearchOverlayView_Previews: PreviewProvider {
         // For preview purposes, we inject a preview Core Data context.
         SearchOverlayView(dismissOverlay: { })
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            .environmentObject(UserData())
     }
 }

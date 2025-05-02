@@ -1,9 +1,10 @@
 //
-//  Card.swift
-//  WalletUI
+//  UserData.swift
+//  CreditCardRec
 //
-//  Created by Shameem Reza on 13/3/22.
+//  Created by Hongzhi ZHU on 4/30/25.
 //
+
 
 import SwiftUI
 
@@ -32,7 +33,7 @@ struct Card: Identifiable, Hashable {
             let images = ["card1", "card2", "card3"]
             let index = Card.visaCounter % images.count
             Card.visaCounter += 1
-            return images[index]
+            return images[0]
         case .masterCard:
             return "card4"
         case .discover:
