@@ -18,8 +18,9 @@ struct CardRebateRowView: View {
             Image(card.cardImage)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 60, height: 40)
+                .frame(height: 60)
                 .padding(.leading)
+//                .matchedGeometryEffect(id: card.id, in: rootAnimation)
 
             Spacer()
 
@@ -45,17 +46,17 @@ struct CardRebateRowView: View {
             Text(label)
                 .font(.subheadline)
                 .padding(.horizontal, 12)
-                .padding(.vertical, 8)
+                .padding(.vertical, 0)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color(.systemGray6))
                 )
                 .padding(.trailing)
         }
+        .frame(height: 80)
         .background(Color.white)
         .cornerRadius(12)
         .shadow(radius: 1)
-        .matchedGeometryEffect(id: card.id, in: rootAnimation)
     }
 }
 
@@ -63,12 +64,23 @@ struct CardRebateRowView_Previews: PreviewProvider {
     @Namespace static var ns
 
     static var previews: some View {
-        CardRebateRowView(
-            card: cards.first!,
-            selectedAreas: [],
-            rootAnimation: ns
-        )
-        .previewLayout(.sizeThatFits)
-        .padding()
+        Group{
+            CardRebateRowView(
+                card: cards.first!,
+                selectedAreas: [],
+                rootAnimation: ns
+            )
+            .previewLayout(.sizeThatFits)
+            .padding()
+            
+            CardRebateRowView(
+                card: cards.first!,
+                selectedAreas: [.drugstores],
+                rootAnimation: ns
+            )
+            .previewLayout(.sizeThatFits)
+            .padding()
+            
+        }
     }
 }

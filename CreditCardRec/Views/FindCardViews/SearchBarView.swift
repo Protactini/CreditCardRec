@@ -16,6 +16,7 @@ struct SearchBarView: View {
     var animation: Namespace.ID
 
     var body: some View {
+        
         HStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
@@ -29,14 +30,14 @@ struct SearchBarView: View {
                                         .fill(Color(.systemGray6))
                                 )
                                 .matchedGeometryEffect(id: area.rawValue, in: animation)
+                                .disabled(!expandSearch)
                                 .onTapGesture {
-                                    if expandSearch {
-                                        withAnimation(.spring()) {
-                                            if let idx = selectedAreas.firstIndex(of: area) {
-                                                selectedAreas.remove(at: idx)
-                                            }
+                                    withAnimation(.spring()) {
+                                        if let idx = selectedAreas.firstIndex(of: area) {
+                                            selectedAreas.remove(at: idx)
                                         }
                                     }
+                                    
                                 }
                         }
                     } else {
@@ -48,7 +49,6 @@ struct SearchBarView: View {
             }
             .frame(height: expandSearch ? 44 : 35)
 
-//            Spacer()
 
             if expandSearch {
                 Button("OK") {
@@ -77,13 +77,17 @@ struct SearchBarView: View {
         )
         .padding()
         .contentShape(Rectangle())
-        .onTapGesture {
+        .contentShape(Rectangle())
+        .disabled(!expandSearch)
+        .simultaneousGesture(
+          TapGesture().onEnded {
             if !expandSearch {
-                withAnimation(.spring()) {
-                    expandSearch = true
-                }
+              withAnimation(.spring()) {
+                expandSearch = true
+              }
             }
-        }
+          }
+        )
     }
 }
 

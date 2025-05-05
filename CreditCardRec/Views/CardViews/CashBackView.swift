@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct CashBackView: View {
+    // User Data
+    @EnvironmentObject var userData: UserData
+    
     let currentCard: Card
     @Binding var expandCards: Bool
     var animation: Namespace.ID
@@ -78,5 +81,6 @@ struct CashBackView_Previews: PreviewProvider {
             expandCards:.constant(true),
             animation: animation
         )
+        .environmentObject(UserData())
     }
 }

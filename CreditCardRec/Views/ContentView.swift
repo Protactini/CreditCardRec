@@ -25,34 +25,21 @@ struct ContentView: View {
      
     var body: some View {
         ZStack{
-            TabView(selection: $selectedTab) {
+            TabView() {
                 CardsView(showOverlay: showOverlay, animation: rootAnimation)
                     .tabItem {
                         Image(systemName: "creditcard")
                         Text("Cards")
                     }
-                    .tag(0)
                 
                 FindBestCardView(rootAnimation: rootAnimation)
                     .tabItem {
                         Image(systemName: "magnifyingglass")
                         Text("Find Best Card")
                     }
-                    .tag(1)
             }
-            .tabViewStyle(DefaultTabViewStyle())
+            .tabViewStyle(.sidebarAdaptable)
             .animation(.easeInOut(duration: 1), value: selectedTab)  // 0.8s duration
-//            .gesture(
-//              DragGesture().onEnded { value in
-//                if value.translation.width < -50 {
-//                  // left swipe → next tab
-//                  withAnimation { selectedTab = min(selectedTab + 1, maxTab) }
-//                } else if value.translation.width > 50 {
-//                  // right swipe → previous tab
-//                  withAnimation { selectedTab = max(selectedTab - 1, 0) }
-//                }
-//              }
-//            )
             .zIndex(0)
             
             // MARK: Overlay Section

@@ -33,16 +33,13 @@ struct FindBestCardView: View {
                 ZStack{
                     // MARK: Card List
                         ScrollView {
-                            LazyVStack(spacing: 16) {
+                            LazyVStack(spacing: 10) {
                                 ForEach(userData.userCards) { card in
-                                    CardView(expandCards: .constant(true), card: card) {
-                                        /* no-op */
-                                    }
-                                    .matchedGeometryEffect(id: card.id, in: rootAnimation)
+                                    CardRebateRowView(card: card, selectedAreas: selectedAreas, rootAnimation: rootAnimation)
                                 }
                             }
                             .padding(.horizontal)
-                            .padding(.bottom, 20)
+                            .padding(.bottom, 0)
                             .animation(.spring().delay(0.1), value: userData.userCards)
                         }
                         .zIndex(0)
@@ -54,7 +51,7 @@ struct FindBestCardView: View {
                         FindCardSearchOverlayView(expandSearch: $expandSearch, selectedAreas: $selectedAreas, animation: rootAnimation)
                         
                         .background(Color(.systemBackground).ignoresSafeArea())
-                        .transition(.opacity.combined(with: .move(edge: .bottom)))
+                        .transition(.opacity.animation(.spring()))
                         .padding(.horizontal)
                         .zIndex(1)
                         .debugBorder(DebugConfig.color(at: 1))

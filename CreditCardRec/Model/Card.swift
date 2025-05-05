@@ -33,7 +33,7 @@ struct Card: Identifiable, Hashable {
             let images = ["card1", "card2", "card3"]
             let index = Card.visaCounter % images.count
             Card.visaCounter += 1
-            return images[0]
+            return images[index]
         case .masterCard:
             return "card4"
         case .discover:

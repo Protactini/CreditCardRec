@@ -8,5 +8,10 @@
 import SwiftUI
 
 final class UserData: ObservableObject {
-    @Published var userCards: [Card] = []
+//    @Published var userCards: [Card] = []
+    // For testing
+    
+    @Published var userCards: [Card] = cards
 }
+
+
