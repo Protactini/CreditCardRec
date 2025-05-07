@@ -49,25 +49,43 @@ A SwiftUI iOS app for managing your credit cards and finding the best one to use
 ## Architecture
 
 ```
-CreditCardRecApp.swift
-├── Persistence.swift       # Core Data + CloudKit setup
-├── UserData.swift          # ObservableObject for shared card state
-├── Models/
-│   ├── Card.swift          # Identifiable, Hashable card model
-│   └── CashBack.swift      # Cashback rate model & areas
-├── Networking/
-│   └── NetworkService.swift  # Async/await API client (future)
-├── Views/
-│   ├── ContentView.swift     # Hosts TabView + overlay logic
-│   ├── CardsView.swift       # Animated card stack
-│   ├── FindBestCardView.swift# Category picker & rebate list
-│   ├── ProfileView.swift     # Wallet management UI
-│   ├── SearchBarView.swift   # Collapsible search bar component
-│   ├── SearchOverlayView.swift # Card‑addition overlay
-│   └── CardRebateRowView.swift # Card + rebate row layout
-└── Supporting/
-    ├── CardView.swift        # Reusable card UI component
-    └── ExpenseCardView.swift # Expanded cashback details
+CreditCardRec/
+├── README.md
+├── CreditCardRec/ # Main Xcode group
+│ ├── APICall/ # Networking layer
+│ │ ├── NetworkService.swift # Async/await HTTP client
+│ │ ├── Post.swift # Decodable model for test API
+│ │ └── PostsListView.swift # SwiftUI view demonstrating fetch
+│ │
+│ ├── DebugProperties/ # Utilities & debug tools
+│ │ └── Boarder.swift # View modifier for debug borders
+│ │
+│ ├── Model/ # Core data types & business logic
+│ │ ├── Card.swift # Card model (Identifiable, Hashable)
+│ │ ├── CashBack.swift # Cashback area & rate model
+│ │ └── UserData.swift # ObservableObject for shared state
+│ │
+│ ├── Views/ # All SwiftUI views, organized by feature
+│ │ ├── CardViews/ # Card‐related screens & components
+│ │ │ ├── CardsView.swift # Animated card stack container
+│ │ │ ├── CardView.swift # Individual card UI + animations
+│ │ │ ├── CashBackView.swift # Expanded cashback detail view
+│ │ │ └── ExpenseCardView.swift # Single‐line expense row
+│ │ │
+│ │ ├── FindCardViews/ # “Find Best Card” feature
+│ │ │ ├── FindBestCardView.swift # Main picker + results view
+│ │ │ ├── CardRebateRowView.swift # Card + rebate row layout
+│ │ │ ├── FindCardSearchOverlayView.swift # Category overlay
+│ │ │ └── SearchBarView.swift # Collapsible category bar
+│ │ │
+│ │ └── Overlays/ # Shared overlay components
+│ │ ├── SearchOverlayView.swift # Card‐addition overlay
+│ │ ├── ProfileView.swift # Manage & edit user cards
+│ │ └── ContentView.swift # TabView + global overlays
+│ │
+│ └── Assets/ # Images, colors, previews
+│
+└── CreditCardRec.entitlements # iCloud/CloudKit entitlements
 ```
 
 * **SwiftUI** for declarative UI
